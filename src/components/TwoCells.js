@@ -15,9 +15,10 @@ const TwoCellComponent = ({title, text, code}) => {
           setIsRightCellShown={setIsRightCellShown}
         />
       </div>
-      <div className={`cell right-cell ${isRightCellShown ? '' : 'hidden'}`}>
-        <CodeBlock code={code} language="javascript" />
-      </div>
+      <div className={`cell right-cell ${isRightCellShown ? 'visible' : 'hidden'}`}>
+  <CodeBlock code={code} language="javascript" />
+</div>
+
     </div>
   );
 };

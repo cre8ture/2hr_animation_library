@@ -46,9 +46,38 @@
   justify-content: space-between;
 }
 
+/* ... other styles ... */
+/* ... other styles ... */
+
+/* Media Query for screens with max-width of 800px */
+@media screen and (max-width: 800px) {
+  .two-cell-container {
+    flex-direction: column;
+  }
+
+  .right-cell {
+    display: none;
+    max-height: 0; /* Collapsed state */
+    transition: max-height 0.5s ease-out; /* Transition */
+  }
+
+  .right-cell.visible {
+    display: block;
+    max-height: 500px; /* Adjust as necessary */
+  }
+}
+
+/* Non-media query styles */
+.right-cell.hidden {
+  display: none;
+  max-height: 0; /* Ensure it's hidden */
+}
+
 .cell {
   flex: 1;
+  overflow: hidden; /* Prevent overflow */
 }
+
 
 .left-cell {
   display: flex;
@@ -115,7 +144,7 @@
 /* FOOTER */
 
 .footer {
-  /* position: fixed; */
+  position: fixed;
   font-size: 12px;
   left: 0;
   bottom: 0;
