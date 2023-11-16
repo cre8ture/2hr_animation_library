@@ -492,17 +492,23 @@ export const animationExamples = [
       const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
       const cube = new THREE.Mesh(geometry, material);
       scene.add(cube);
+      let zoomDirection = 1; // 1 for zooming in, -1 for zooming out
 
-      // Apply dolly (move camera closer/further) and zoom (change field of view) effects
       function animate() {
-        requestAnimationFrame(animate);
-
         // Apply dolly effect (move the camera closer/further)
         camera.position.z += 0.5; // Increase or decrease for dolly effect
 
         // Apply zoom effect (change field of view)
-        camera.fov += 0.1; // Increase or decrease for zoom effect
-        camera.updateProjectionMatrix();
+        // Apply zoom effect (change field of view)
+  camera.fov += 0.01 * zoomDirection; // Increase or decrease for zoom effect
+  camera.updateProjectionMatrix();
+
+        // If fov is greater than 100 or less than 50, change zoom direction
+        if (camera.fov > 100) {
+          zoomDirection = -1;
+        } else if (camera.fov < 50) {
+          zoomDirection = 1;
+        }
 
         cube.rotation.x += 0.01;
         cube.rotation.y += 0.01;
@@ -510,12 +516,151 @@ export const animationExamples = [
         renderer.render(scene, camera);
       }
 
-      animate();
+      setInterval(animate, 1000 / 60); // 60 FPS
     </script>
   </body>
   </html>
   `
 },
+
+{
+  "title": "Bouncing Ball in 3D",
+  "text": "This example demonstrates a 3D scene with a bouncing ball.",
+  "code": `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Your CSS styles here */
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+  // Scene setup
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+  // Bouncing ball setup
+  const ballGeometry = new THREE.SphereGeometry(1, 32, 32);
+  const ballMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // Use MeshPhongMaterial and set color to red
+  const ball = new THREE.Mesh(ballGeometry, ballMaterial);
+  scene.add(ball);
+
+  // Add a light so we can see the ball's 3D effect
+  const light = new THREE.PointLight(0xffffff, 1, 1000);
+  light.position.set(10, 10, 10);
+  scene.add(light);
+
+  // Set initial position and velocity of the ball
+  ball.position.set(0, 0, -5);
+  let velocity = 0.05;
+
+  // Animation loop
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Bounce the ball
+    if (ball.position.y <= -3 || ball.position.y >= 3) {
+      velocity = -velocity; // Reverse velocity when hitting top or bottom
+    }
+
+    ball.position.y += velocity;
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>
+</body>
+</html>
+`
+},
+{
+  "title": "Orbiting Planet with Moon",
+  "text": "This example demonstrates a 3D scene with a planet orbiting a star at a slower speed.",
+  "code": `<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    /* Your CSS styles here */
+  </style>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+  // Scene setup
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+// Star setup
+const starGeometry = new THREE.SphereGeometry(1, 32, 32);
+const starMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+const star = new THREE.Mesh(starGeometry, starMaterial);
+scene.add(star);
+
+// Planet setup
+const planetGeometry = new THREE.SphereGeometry(0.5, 32, 32);
+const planetMaterial = new THREE.MeshPhongMaterial({ color: 0x3498db });
+const planet = new THREE.Mesh(planetGeometry, planetMaterial);
+scene.add(planet);
+
+// Moon setup
+const moonGeometry = new THREE.SphereGeometry(0.2, 32, 32);
+const moonMaterial = new THREE.MeshPhongMaterial({ color: 0xaaaaaa });
+const moon = new THREE.Mesh(moonGeometry, moonMaterial);
+scene.add(moon);
+
+// Add a light source
+const light = new THREE.PointLight(0xffffff, 1, 1000);
+light.position.set(10, 10, 10);
+scene.add(light);
+
+// Set initial positions
+star.position.set(0, 0, 0);
+planet.position.set(3, 0, 0);
+moon.position.set(4, 0, 0);
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Rotate the planet and moon
+  planet.rotation.y += 0.01;
+  moon.rotation.y += 0.02;
+
+  // Orbit the planet and moon
+  const planetOrbitRadius = 2; // Adjusted orbit radius
+  const moonOrbitRadius = 0.5; // Adjusted orbit radius
+  const planetOrbitSpeed = 0.01; // Adjusted orbit speed
+  const moonOrbitSpeed = 0.02;   // Adjusted orbit speed
+
+  planet.position.x = planetOrbitRadius * Math.cos(planetOrbitSpeed * Date.now());
+  planet.position.z = planetOrbitRadius * Math.sin(planetOrbitSpeed * Date.now());
+
+  moon.position.x = planet.position.x + moonOrbitRadius * Math.cos(moonOrbitSpeed * Date.now());
+  moon.position.z = planet.position.z + moonOrbitRadius * Math.sin(moonOrbitSpeed * Date.now());
+
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+</body>
+</html>
+`
+},
+
+
 
 {
   "title": "Floating Elements Animation",
